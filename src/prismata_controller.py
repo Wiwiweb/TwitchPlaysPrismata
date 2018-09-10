@@ -16,6 +16,11 @@ class PrismataController:
         pyautogui.press(key)
 
     @staticmethod
+    def hotkey(modifier, key):
+        PrismataController.prismata_window.set_focus()
+        pyautogui.hotkey(modifier, key)
+
+    @staticmethod
     def post_startup():
         PrismataController.prismata_window.set_focus()
         # PrismataController.click_position('dismiss_patch_notes')

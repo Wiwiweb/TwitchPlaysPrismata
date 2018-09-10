@@ -18,6 +18,9 @@ def process_commands():
         method = command.method
         if method == 'press':
             PrismataController.press(command.arguments)
+        elif method == 'hotkey':
+            modifier, key = command.arguments
+            PrismataController.hotkey(modifier, key)
 
 def check_and_restart_match():
     while True:
