@@ -6,6 +6,9 @@ from globals import config, log, chat_log
 
 Command = namedtuple('Command', ['method', 'arguments'])
 
+DISPLAY_USERNAME_MAX_LENGTH = int(config['Stream']['display_username_max_length'])
+DISPLAY_COMMAND_MAX_LENGTH = int(config['Stream']['display_command_max_length'])
+
 class TwitchBot(irc.bot.SingleServerIRCBot):
 
     valid_keys = {'q', 'space', 'backspace', 'escape',
@@ -32,7 +35,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         log.debug('Joined channel ' + event.target)
 
     def on_pubmsg(self, connection, event):
-        text = event.arguments[0]
+        text = event.arguments[0].lower()
         username = ''
         for tag in event.tags:  # Iterating through to find the key because this gives us a list instead of a dict...
             if tag['key'] == 'display-name':
@@ -44,8 +47,12 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
             command = Command(command_method, text)
             self.command_queue.put(command)
             log.info("New command: {} {}".format(command_method, text))
-
-
+            with open(config['Files']['stream_display_usernames'], 'a') as file:
+                truncated_username = username[0:DISPLAY_USERNAME_MAX_LENGTH]
+                file.write(truncated_username + '\n')
+            with open(config['Files']['stream_display_commands'], 'a') as file:
+                truncated_command = text[0:DISPLAY_COMMAND_MAX_LENGTH]
+                file.write(truncated_command + '\n')
 
     def on_disconnect(self, connection, event):
         log.info('Disconnected (channel {})'.format(self.channel))

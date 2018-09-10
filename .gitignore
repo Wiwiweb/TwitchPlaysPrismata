@@ -1,3 +1,5 @@
 cfg/secrets.ini
 .idea
 src/__pycache__
+stream_display_usernames.txt
+stream_display_commands.txt

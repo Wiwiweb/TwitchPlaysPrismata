@@ -1,5 +1,4 @@
 from multiprocessing import Process, SimpleQueue
-import os
 
 from globals import config, log, test_mode
 from twitch_bot import TwitchBot
@@ -23,6 +22,10 @@ def process_commands():
 if __name__ == '__main__':
     log.info('=== Starting TwitchPlaysPrismata ===')
     # os.system(config['Files']['prismata_exe_path'])
+
+    # Clear display files
+    open(config['Files']['stream_display_usernames'], 'w').close()
+    open(config['Files']['stream_display_commands'], 'w').close()
 
     bot_process = Process(target=start_twitch_bot, args=(command_queue,))
     bot_process.start()
