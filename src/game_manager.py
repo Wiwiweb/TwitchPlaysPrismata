@@ -1,4 +1,5 @@
 from multiprocessing import Process, SimpleQueue
+from time import sleep
 
 from globals import config, log, test_mode
 from twitch_bot import TwitchBot
@@ -18,6 +19,10 @@ def process_commands():
         if method == 'press':
             PrismataController.press(command.arguments)
 
+def check_and_restart_match():
+    while True:
+        PrismataController.check_and_restart_match()
+        sleep(2)
 
 if __name__ == '__main__':
     log.info('=== Starting TwitchPlaysPrismata ===')
@@ -29,5 +34,13 @@ if __name__ == '__main__':
 
     bot_process = Process(target=start_twitch_bot, args=(command_queue,))
     bot_process.start()
+
+    PrismataController.post_startup()
+    PrismataController.vs_computer()
+    sleep(1)
+    PrismataController.split_unit_tab()
+
+    check_and_restart = Process(target=check_and_restart_match)
+    check_and_restart.start()
 
     process_commands()
