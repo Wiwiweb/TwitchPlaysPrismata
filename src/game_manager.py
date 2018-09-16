@@ -21,6 +21,9 @@ def process_commands():
         elif method == 'hotkey':
             modifier, key = command.arguments
             PrismataController.hotkey(modifier, key)
+        elif method == 'click':
+            column, horizontal = command.arguments
+            PrismataController.click(column, horizontal)
 
 def check_and_restart_match():
     while True:

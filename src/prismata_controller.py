@@ -16,6 +16,18 @@ class PrismataController:
         pyautogui.press(key)
 
     @staticmethod
+    def click(column, horizontal):
+        # Map the command coordinate of range 0-1000
+        # to a pixel from the range horizontal_start to horizontal_end
+        horizontal_start = int(config['Screen positions']['horizontal_start'])
+        horizontal_end = int(config['Screen positions']['horizontal_end'])
+        horizontal_range = horizontal_end - horizontal_start
+        x = round((horizontal * horizontal_range / 1000) + horizontal_start)
+        y = int(config['Screen positions']['column_{}'.format(column)])
+        PrismataController.prismata_window.set_focus()
+        pyautogui.click(x=x, y=y)
+
+    @staticmethod
     def hotkey(modifier, key):
         PrismataController.prismata_window.set_focus()
         pyautogui.hotkey(modifier, key)
@@ -71,3 +83,4 @@ class PrismataController:
         expected_colours = tuple(map(int, expected_colours.split(',')))
         log.debug('{}: expected {} got {}'.format(position_name, colours, expected_colours))
         return colours == expected_colours
+60
