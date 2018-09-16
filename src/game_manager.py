@@ -24,6 +24,8 @@ def process_commands():
         elif method == 'click':
             column, horizontal = command.arguments
             PrismataController.click(column, horizontal)
+        elif method == 'emote':
+            PrismataController.emote(command.arguments)
 
 def check_and_restart_match():
     while True:

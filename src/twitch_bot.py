@@ -51,6 +51,8 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         valid_command = False
         if text.startswith('click'):
             valid_command = self.command_click(text)
+        if text.startswith('emote'):
+            valid_command = self.command_emote(text)
         else:
             command_non_repeatable_match = re.fullmatch(VALID_NON_REPEATABLE_COMMAND, text)
             if command_non_repeatable_match is not None:
@@ -83,6 +85,9 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
                 file.write(truncated_command + '\n')
 
     def command_click(self, text):
+        split = text.split()
+        if len(split) != 3:
+            return False
         _, column, horizontal = text.split()
         try:
             column = int(column)
@@ -90,10 +95,18 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         except ValueError:
             return False
         if 1 <= column <= 6 and 0 <= horizontal <= 1000:
-            self.queue_command('click`', [column, horizontal])
+            self.queue_command('click', [column, horizontal])
             return True
         else:
             return False
+
+    def command_emote(self, text):
+        split = text.split(' ', 1)
+        if len(split) != 2:
+            return False
+        _, emote_text = split
+        self.queue_command('emote', emote_text)
+        return True
 
     def queue_command(self, command_method, args):
         command = Command(command_method, args)

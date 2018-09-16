@@ -16,6 +16,11 @@ class PrismataController:
         pyautogui.press(key)
 
     @staticmethod
+    def hotkey(modifier, key):
+        PrismataController.prismata_window.set_focus()
+        pyautogui.hotkey(modifier, key)
+
+    @staticmethod
     def click(column, horizontal):
         # Map the command coordinate of range 0-1000
         # to a pixel from the range horizontal_start to horizontal_end
@@ -28,9 +33,10 @@ class PrismataController:
         pyautogui.click(x=x, y=y)
 
     @staticmethod
-    def hotkey(modifier, key):
-        PrismataController.prismata_window.set_focus()
-        pyautogui.hotkey(modifier, key)
+    def emote(text):
+        pyautogui.press('`')
+        pyautogui.typewrite(text)
+        pyautogui.press('enter')
 
     @staticmethod
     def post_startup():
